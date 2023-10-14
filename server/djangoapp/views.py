@@ -22,6 +22,9 @@ logger = logging.getLogger(__name__)
 def about_view(request):
     return render(request, 'djangoapp/about.html')
 
+def contact(request):
+    return render(request, 'djangoapp/contact.html')
+
 # Create a `contact` view to return a static contact page
 #def contact(request):
 
