@@ -10,7 +10,20 @@
     <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
+
+    <style>
+     
+        footer a {
+            color: #fff; 
+          }
+  
+        main {
+      min-height: 70vh; 
+      background-color: #f2f2f2; 
+        }
+    </style>
 </head>
 
     <body>
@@ -39,6 +52,20 @@
           
 
     <!--Add a dealer table here -->
+    <main></main>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+      <div class="container">
+          <div class="row">
+            <div class="socialIcons col-md-12">
+              <a href="{% url 'djangoapp:contact' %}"><i class="fa-regular fa-envelope"></i></i></a>
+          </div>
+           <div class="col-md-12">
+             <a  href="{% url 'djangoapp:contact' %}">Contact us</a>
+            </div>
+          </div>
+      </div>
+    </footer>
 
     </body>
 
