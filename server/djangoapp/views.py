@@ -2,23 +2,18 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealers_by_state, get_dealer_reviews_from_cf,post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from django.http import JsonResponse
 
-# Get an instance of a logger
+
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
-
-# Create an `about` view to render a static about page
-# def about(request):
-# ...
 
 def registration_request(request):
     context = {}
@@ -45,10 +40,6 @@ def registration_request(request):
             context['message'] = "User already exists."
             return render(request, 'django/registration.html', context)
 
-
-
-
-
 def login_request(request):
     context = {}
     if request.method == "POST":
@@ -64,7 +55,6 @@ def login_request(request):
     else:
         return render(request, 'djangoapp/index.html', context)
     
-
 def logout_request(request):
     logout(request)
     return redirect('djangoapp:index')
@@ -74,23 +64,6 @@ def about_view(request):
 
 def contact(request):
     return render(request, 'djangoapp/contact.html')
-
-# Create a `contact` view to return a static contact page
-#def contact(request):
-
-# Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
-
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
-
-# Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
-
-# Update the `get_dealerships` view to render the index page with a list of dealerships
 
 
 def get_dealerships(request):
@@ -106,12 +79,58 @@ def get_dealerships(request):
             return HttpResponse(dealer_names)
 
 
+def get_dealerships_state(request,**kwargs ):
+        if request.method == "GET":
+            state=kwargs.get('state')
+            print(state)
+            url = "https://us-south.functions.appdomain.cloud/api/v1/web/1f16b4b5-fc38-46d0-beef-cebfe392acd1/dealership-package/get-dealership"
+            # Get dealers from the URL
+            dealerships = get_dealers_by_state(url,**kwargs)
+            # Concat all dealer's short name
+            dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+            # Return a list of dealer short name
+            
+            return HttpResponse(dealer_names)
 
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
 
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def get_dealer_details(request, **kwargs):
+     
+     if request.method == "GET":
+        dealer_id = kwargs.get('id')
+        print("in the view")
+        print(dealer_id)
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/1f16b4b5-fc38-46d0-beef-cebfe392acd1/dealership-package/get-review2"
+        dealerships = get_dealer_reviews_from_cf(url,**kwargs)
+        print(dealerships)
 
+
+        # Extract short names from dealerships
+        dealer_names = ' '.join([dealer.review for dealer in dealerships])
+        dealer_review = [dealer.review for dealer in dealerships]
+                # Return JSON response containing dealer names
+        #return JsonResponse(dealerships, safe=False)
+        return HttpResponse(dealer_names)
+
+          
+def add_review(request, dealer_id):
+      if request.user.is_authenticated:
+                 review = {
+    
+        "id": 1114,
+        "name": "Upkar Lidder",
+        "dealership": 23,
+        "review": "  lovely place",
+        "purchase": False,
+        "another": "field",
+        "purchase_date": "02/16/2020",
+        "car_make": "Audi",
+        "car_model": "Car",
+        "car_year": 2021
+    
+}
+
+                 json_payload = {}
+                 json_payload["review"] = review # thi is r=the request body
+                 url="https://us-south.functions.appdomain.cloud/api/v1/web/1f16b4b5-fc38-46d0-beef-cebfe392acd1/dealership-package/post_review"
+                 post_request(url, json_payload, dealerId=dealer_id)
+                 return redirect("djangoapp:dealer_details", id=dealer_id)
