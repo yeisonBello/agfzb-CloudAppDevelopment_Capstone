@@ -6,9 +6,10 @@ class CarMake(models.Model):
   name = models.CharField(null=False, max_length=30, default='car')
   description = models.CharField(null=False, max_length=60, default='sport car')
 
+ # def __str__(self):
+ #       return self.name + " " + self.description
   def __str__(self):
-        return self.name + " " + self.description
-
+        return self.name 
 
 class CarModel(models.Model):
    CAR_TYPES = [

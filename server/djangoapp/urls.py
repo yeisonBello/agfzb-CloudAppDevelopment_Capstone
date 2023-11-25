@@ -7,17 +7,10 @@ app_name = 'djangoapp'
 urlpatterns = [
  
 
-    path(route='', view=views.get_dealerships_state, name='index'),# funciona todo 
-    #path('<str:state>/', view=views.get_dealerships_state, name='index'), # hay un problema aqui que no deja cargar las otras
-    path('dealer/<int:id>/', views.get_dealer_details, name='dealer_details'),# funciona a la mitad
-    
-    
-   
-    path(route='dealer/<int:dealer_id>/add_review', view=views.add_review, name='add_review'),
+    path(route='', view=views.get_dealerships, name='index'),
+    path('dealer/<int:id>/', views.get_dealer_details, name='dealer_details'),
+    path(route='dealer/<int:dealer_id>/post_review', view=views.add_review, name='post_review'),
   
- 
-
-   
     path('registration/', views.registration_request, name='registration'),
     path('about/', views.about_view, name='about'),
     path('contact/', view=views.contact, name='contact'),
