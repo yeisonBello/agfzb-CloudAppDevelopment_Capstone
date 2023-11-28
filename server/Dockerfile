@@ -29,7 +29,7 @@ EXPOSE 8000
 RUN chmod +x $APP/entrypoint.sh
 
 # Set the entrypoint for the container
-ENTRYPOINT ["/bin/bash", "$APP/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
 
 # Default command to run the application using Gunicorn
 CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "djangobackend.wsgi"]
